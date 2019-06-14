@@ -28,12 +28,6 @@ namespace Mediator
         /// <returns>The <typeparamref name="TResponse"/> from the <typeparamref name="TRequest"/>.</returns>
         public override async Task<TResponse> Handle(IAmARequest<TResponse> request, IServiceFactory factory)
         {
-            //Task<TResponse> handler() => factory
-            //    .GetHandler<IHandleRequests<TRequest, TResponse>>()
-            //    .Handle((TRequest)request);
-
-
-            //return await handler.Handle((TRequest)request).ConfigureAwait(false); 
             var handler = factory.GetHandler<IHandleRequests<TRequest, TResponse>>();
             return await handler.Handle((TRequest)request);
         }

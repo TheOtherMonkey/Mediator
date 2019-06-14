@@ -29,7 +29,6 @@ namespace Mediator.StructureMap.Tests
             });
 
             var handler = cfg.For(typeof(IHandleRequests<,>));
-
             handler.DecorateAllWith(typeof(AuthorizationHandler<,>));
             handler.DecorateAllWith(typeof(LoggingHandler<,>));
 

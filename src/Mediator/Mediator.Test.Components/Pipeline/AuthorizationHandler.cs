@@ -9,7 +9,6 @@ namespace Mediator.Test.Components.Pipeline
 
     public class AuthorizationHandler<TRequest, TResponse> :
         AuthorizationHandler,
-        IPipelineBehaviour<TRequest, TResponse>,
         IHandleRequests<TRequest, TResponse>
         where TRequest : IAmARequest<TResponse>
     {
@@ -25,13 +24,6 @@ namespace Mediator.Test.Components.Pipeline
         {
             RequestHandled = true;
             return await _inner.Handle(request);
-        }
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next)
-        {
-            RequestHandled = true;
-            var response = await next();
-            return response;
         }
     }
 }
