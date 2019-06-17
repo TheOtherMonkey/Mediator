@@ -2,28 +2,23 @@
 
 namespace Mediator.Test.Components.Pipeline
 {
-    public abstract class LoggingHandler
+    public class LoggingHandler
     {
         public static bool RequestHandled;
     }
 
     public class LoggingHandler<TRequest, TResponse> :
-        LoggingHandler,
-        IHandleRequests<TRequest, TResponse>
+        PipelineBehaviour<TRequest, TResponse>
         where TRequest : IAmARequest<TResponse>
     {
-        private readonly IHandleRequests<TRequest, TResponse> _inner;
-
-        public LoggingHandler(IHandleRequests<TRequest, TResponse> inner)
+        public LoggingHandler(IHandleRequests<TRequest, TResponse> inner) : base(inner)
         {
-            _inner = inner;
-            RequestHandled = false;
+            LoggingHandler.RequestHandled = false;
         }
 
-        public async Task<TResponse> Handle(TRequest request)
+        protected override void PostHandle(TRequest request, TResponse response)
         {
-            RequestHandled = true;
-            return await _inner.Handle(request);
+            LoggingHandler.RequestHandled = true;
         }
     }
 }

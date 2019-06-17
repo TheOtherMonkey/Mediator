@@ -8,22 +8,18 @@ namespace Mediator.Test.Components.Pipeline
     }
 
     public class AuthorizationHandler<TRequest, TResponse> :
-        AuthorizationHandler,
-        IHandleRequests<TRequest, TResponse>
+        PipelineBehaviour<TRequest, TResponse>
         where TRequest : IAmARequest<TResponse>
     {
-        private readonly IHandleRequests<TRequest, TResponse> _inner;
-
-        public AuthorizationHandler(IHandleRequests<TRequest, TResponse> inner)
+        
+        public AuthorizationHandler(IHandleRequests<TRequest, TResponse> inner) : base(inner)
         {
-            _inner = inner;
-            RequestHandled = false;
+            AuthorizationHandler.RequestHandled = false;
         }
 
-        public async Task<TResponse> Handle(TRequest request)
+        protected override void PostHandle(TRequest request, TResponse response)
         {
-            RequestHandled = true;
-            return await _inner.Handle(request);
-        }
+            AuthorizationHandler.RequestHandled = true;
+        }        
     }
 }
