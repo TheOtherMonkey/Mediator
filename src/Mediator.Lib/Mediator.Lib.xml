@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mediator.Lib</name>
+    </assembly>
+    <members>
+        <member name="T:Mediator.IAmARequest">
+            <summary>
+            Interface for a class that represents a request that will be made using 
+            <see cref="M:Mediator.IMediate.Send``1(``0)"/> and handled by an object that
+            implements the <see cref="T:Mediator.IHandleRequests`2"/> interface.
+            </summary>
+        </member>
+        <member name="T:Mediator.IAmARequest`1">
+            <summary>
+            Interface for a class that represents a request that will be made using 
+            <see cref="M:Mediator.IMediate.Request``1(Mediator.IAmARequest{``0})"/> and the type of object that is returned
+            as its response. Will be handled by an object that implements the
+            <see cref="T:Mediator.IHandleRequests`2"/> interface.
+            </summary>
+            <typeparam name="TResponse">The type that identifies the class that represents the response from the request.</typeparam>
+        </member>
+        <member name="T:Mediator.IHandleRequests`2">
+            <summary>
+            Interface for classes that handle <see cref="T:Mediator.IAmARequest`1"/>.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+            <typeparam name="TResponse">The type that identifies the class that represents the response from the request.</typeparam>
+        </member>
+        <member name="M:Mediator.IHandleRequests`2.Handle(`0)">
+            <summary>
+            Handle the request and provide a response to that request.
+            </summary>
+            <param name="request">The request/query for which a response is required.</param>
+            <returns>The request to the response.</returns>
+        </member>
+        <member name="T:Mediator.IHandleRequests`1">
+            <summary>
+            Interface for classes the handle <see cref="T:Mediator.IAmARequest"/>.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+        </member>
+        <member name="T:Mediator.IMediate">
+            <summary>
+            Interface for the class that mediates request/responses.
+            </summary>
+        </member>
+        <member name="M:Mediator.IMediate.Request``1(Mediator.IAmARequest{``0})">
+            <summary>
+            Make an asynchronous request that will be handled by an object that implements the
+            <see cref="T:Mediator.IHandleRequests`2"/> interface and receive a response.
+            </summary>
+            <typeparam name="TResponse">The type that indicates the expected response from the request.</typeparam>
+            <param name="request">The request being made.</param>
+            <returns>Object from the <see cref="M:Mediator.IHandleRequests`2.Handle(`0)"/> method.</returns>
+        </member>
+        <member name="M:Mediator.IMediate.Send``1(``0)">
+            <summary>
+            Send an asynchronous request that will be handled by an object that implements the
+            <see cref="T:Mediator.IHandleRequests`2"/> interface where <typeparamref name="TRequest"/>
+            is a <see cref="T:Mediator.IAmARequest`1"/>.
+            </summary>
+            <param name="request">The request being made.</param>
+        </member>
+        <member name="M:Mediator.IMediate.Publish``1(``0)">
+            <summary>
+            Asynchronously sends a message through the system to any registered object that implements the relevant
+            .<see cref="T:Aggregator.IListenFor`1"/> interface.
+            </summary>
+            <typeparam name="T">The type of message being raised.</typeparam>
+            <param name="message">The message being sent.</param>        
+        </member>
+        <member name="T:Mediator.HandleRequestsDelegate`1">
+            <summary>
+            Delegate for the async continuation of the execution of the pipeline.
+            </summary>
+            <typeparam name="TResponse">Response type for the delegate.</typeparam>
+            <returns>Awaitable task for <typeparamref name="TResponse"/>.</returns>
+        </member>
+        <member name="T:Mediator.IPipelineBehaviour`2">
+            <summary>
+            Interface for the pipeline behaviors surrounding an inner <see cref="T:Mediator.IHandleRequests`2"/>.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+            <typeparam name="TResponse">The type that identifies the class that represents the response from the request.</typeparam>
+        </member>
+        <member name="M:Mediator.IPipelineBehaviour`2.Handle(`0,Mediator.HandleRequestsDelegate{`1})">
+            <summary>
+            Perform some actions prior to the invoking the the next <see cref="T:Mediator.HandleRequestsDelegate`1"/>
+            in the pipeline.
+            </summary>
+            <param name="request">The request that initiated the pipeline.</param>
+            <param name="next">The next component in the pipeline.</param>
+            <returns>the response from the <paramref name="next"/> item in the pipeline.</returns>
+        </member>
+        <member name="T:Mediator.IServiceFactory">
+            <summary>
+            Interface to be used by an object that wraps the IoC container of
+            choice that will be used by the mediator.
+            </summary>
+        </member>
+        <member name="M:Mediator.IServiceFactory.GetInstance``1">
+            <summary>
+            Construct a new instance of the object that is of type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of object to be constructed.</typeparam>
+            <returns>An object of type <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:Mediator.IServiceFactory.GetInstances``1">
+            <summary>
+            Get all instances of type T.
+            </summary>
+            <typeparam name="T">The type of object to be constructed.</typeparam>
+            <returns>an enumerable list of items of type <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="T:Mediator.PipelineBehaviour`2">
+            <summary>
+            Abstract base class for a component in the behaviour pipeline.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+            <typeparam name="TResponse">The type that identifies the class that represents the response from the request.</typeparam>
+        </member>
+        <member name="M:Mediator.PipelineBehaviour`2.Handle(`0,Mediator.HandleRequestsDelegate{`1})">
+            <summary>
+            <inheritdoc cref="T:Mediator.IPipelineBehaviour`2"/>
+            </summary>
+        </member>
+        <member name="M:Mediator.PipelineBehaviour`2.PreHandle(`0)">
+            <summary>
+            Perform actions prior the the next item in the pipeline being executed.
+            </summary>
+            <param name="request">The request that has been made.</param>
+        </member>
+        <member name="M:Mediator.PipelineBehaviour`2.InvokeHandle(`0,Mediator.HandleRequestsDelegate{`1})">
+            <summary>
+            Invoke the handler for the next item in the pipeline.
+            </summary>
+            <param name="request">The request that has been made.</param>
+            <param name="next">The next item in the pipeline.</param>
+            <returns>The response from the next item in the pipeline.</returns>
+        </member>
+        <member name="M:Mediator.PipelineBehaviour`2.PostHandle(`0,`1)">
+            <summary>
+            Perform actions after the the next item in the pipeline has been executed.
+            </summary>
+            <param name="request">The request that has been made.</param>
+            <param name="response">The response from the next item in the pipeline.</param>
+        </member>
+        <member name="T:Mediator.RequestHandlerDecorator`2">
+            <summary>
+            Decorator for a <see cref="T:Mediator.IHandleRequests`2"/> that will be
+            wrapped around to form a pipeline of behavior.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+            <typeparam name="TResponse">The type that identifies the class that represents the response from the request.</typeparam>
+        </member>
+        <member name="F:Mediator.RequestHandlerDecorator`2.Inner">
+            <summary>
+            The request that is being decorated.
+            </summary>
+        </member>
+        <member name="M:Mediator.RequestHandlerDecorator`2.#ctor(Mediator.IHandleRequests{`0,`1})">
+            <summary>
+            Construct a new instance of the <see cref="T:Mediator.RequestHandlerDecorator`2"/> class.
+            </summary>
+            <param name="inner">the inner/decorated <see cref="T:Mediator.IHandleRequests`2"/> object.</param>
+        </member>
+        <member name="M:Mediator.RequestHandlerDecorator`2.Handle(`0)">
+            <summary>
+            Handle the request and provide a response to that request. Allows the decorator to
+            insert behaviour before and/or after the the decorated <see cref="T:Mediator.IHandleRequests`2"/>.
+            </summary>
+            <param name="request">The request/query for which a response is required.</param>
+            <returns>The request to the response.</returns>
+        </member>
+        <member name="T:Mediator.Void">
+            <summary>
+            Represents a null/void response for a <see cref="T:Mediator.IAmARequest`1"/>
+            </summary>
+        </member>
+        <member name="F:Mediator.Void.Task">
+            <summary>
+            Get a new <see cref="T:System.Threading.Tasks.Task`1"/> instance.
+            </summary>
+        </member>
+        <member name="P:Mediator.Void.Instance">
+            <summary>
+            Get the instance of the <see cref="T:Mediator.Void"/> object.
+            </summary>
+        </member>
+        <member name="M:Mediator.Void.#ctor">
+            <summary>
+            Private constructor to prevent new instances of the <see cref="T:Mediator.Void"/> object from being
+            instantiated.
+            </summary>
+        </member>
+        <member name="T:Mediator.VoidRequestHandler`1">
+            <summary>
+            Abstract handler for a <see cref="T:Mediator.IHandleRequests`2"/> that returns
+            no response.
+            </summary>
+            <typeparam name="TRequest">The type that identifies the class that represents a request.</typeparam>
+        </member>
+        <member name="M:Mediator.VoidRequestHandler`1.Handle(`0)">
+            <inheritdoc cref="T:Mediator.IHandleRequests`1"/>
+            <returns>a new <see cref="T:Mediator.Void"/> response.</returns>
+        </member>
+        <member name="M:Mediator.VoidRequestHandler`1.HandleRequest(`0)">
+            <summary>
+            Invoke the behaviour required for the request.
+            </summary>
+            <param name="request">The request being made.</param>
+        </member>
+    </members>
+</doc>

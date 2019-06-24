@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aggregator.Lib</name>
+    </assembly>
+    <members>
+        <member name="T:Aggregator.IAggregateMessages">
+            <summary>
+            Interface for a centralized in-memory Event Aggregator. 
+            See https://martinfowler.com/eaaDev/EventAggregator.html for a description of the pattern.
+            </summary>
+        </member>
+        <member name="M:Aggregator.IAggregateMessages.AddListener(System.Object)">
+            <summary>
+            Add a new listener to the event aggregator. Each listener must implement the <see cref="T:Aggregator.IListenFor`1"/> at least once
+            to be added to the list of subscribers.
+            </summary>
+            <param name="listener">The listener to be added.</param>
+        </member>
+        <member name="M:Aggregator.IAggregateMessages.Publish``1(``0)">
+            <summary>
+            Asynchronously sends a message through the system to any registered object that implements the relevant
+            .<see cref="T:Aggregator.IListenFor`1"/> interface.
+            </summary>
+            <typeparam name="T">The type of message being raised.</typeparam>
+            <param name="message">The message being sent.</param>        
+        </member>
+        <member name="T:Aggregator.IAmAMessage">
+            <summary>
+            Interface for an message that will be sent by <see cref="M:Aggregator.IAggregateMessages.Publish``1(``0)"/>
+            and handled by an object that implements the <see cref="T:Aggregator.IListenFor`1"/> interface.
+            </summary>
+        </member>
+        <member name="T:Aggregator.IListenFor`1">
+            <summary>
+            Generic interface to identify a class's interest in a particular message that can be propagated
+            by the <see cref="T:Aggregator.IAggregateMessages"/>. Objects can implement multiple <see cref="T:Aggregator.IListenFor`1"/>
+            interfaces if they are interested in multiple messages.    
+            </summary>
+            <typeparam name="T">The type of message being listened for.</typeparam>
+            <remarks>
+            To be automatically register new objects with an application's <see cref="T:Aggregator.IAggregateMessages"/>,
+            the <see cref="T:Aggregator.IAggregateMessages"/> needs to be registered as a singleton object and a StructureMap
+            type interceptor is required (assuming StructureMap is the IoC of choice).
+            </remarks>
+        </member>
+        <member name="M:Aggregator.IListenFor`1.Handle(`0)">
+            <summary>
+            Respond to the particular message being raised.
+            </summary>
+            <param name="message">The message that was raised.</param>
+        </member>
+    </members>
+</doc>

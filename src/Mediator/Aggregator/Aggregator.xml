@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aggregator</name>
+    </assembly>
+    <members>
+        <member name="T:Aggregator.MessageAggregator">
+            <summary>
+            The centralized in-memory event aggregateMessages for the Emerald Application Suite.   
+            </summary>    
+            <remarks>
+            Utilizes the <see cref="T:System.WeakReference"/> type which allows a reference to be obtained and stored
+            whilst still allowing the underlying object to be Garbage Collected.
+            </remarks>
+        </member>
+        <member name="F:Aggregator.MessageAggregator.Subscriptions">
+            <summary>
+            Dictionary pairing <see cref="T:Aggregator.IListenFor`1"/> to the collection of
+            <see cref="T:System.Object"/>'s that implement that specific <see cref="T:Aggregator.IListenFor`1"/> interface
+            </summary>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.AddListener(System.Object)">
+            <summary>
+            Add a new listener to the collection of subscriptions using a <see cref="T:System.WeakReference" />.
+            </summary>
+            <param name="listener">The listener to be registered.</param>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.Publish``1(``0)">
+            <summary>
+            Asynchronously send a message to all appropriate registered listeners.
+            </summary>
+            <typeparam name="T">The type of message being sent.</typeparam>
+            <param name="message">The message to be sent.</param>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.Publish``1(``0,System.Collections.Generic.IEnumerable{System.WeakReference})">
+            <summary>
+            Send the <paramref name="message"/> to all <paramref name="subscriptions"/>.
+            </summary>
+            <typeparam name="T">The type of message being sent.</typeparam>
+            <param name="message">The message to be sent.</param>
+            <param name="subscriptions">The subscribers who have registered an interest in the message being sent.</param>
+            <returns>The list of any subscriptions that have been garbage collected and need to be removed.</returns>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.Publish``1(``0,System.WeakReference)">
+            <summary>
+            Sends the message to the correct object.
+            </summary>
+            <typeparam name="T">The type of message being sent.</typeparam>
+            <param name="message">The message being sent.</param>
+            <param name="subscription">The weak link to the listener object.</param>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.GetListenerTypes(System.Object)">
+            <summary>
+            Find all declarations of the <see cref="T:Aggregator.IListenFor`1"/> interface that the <paramref name="listener"/> 
+            implements.
+            </summary>
+            <param name="listener">The listener being registered.</param>
+            <returns>The list of <see cref="T:Aggregator.IListenFor`1"/> types the <paramref name="listener"/> implements.</returns>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.GetSubscriptions(System.Type)">
+            <summary>
+            Find the collection of <see cref="T:System.WeakReference"/>'s from the <see cref="F:Aggregator.MessageAggregator.Subscriptions"/>
+            for the <paramref name="listenerType"/>. If the type has not been seen before, a new entry
+            for it is created in the <see cref="F:Aggregator.MessageAggregator.Subscriptions"/>.
+            </summary>
+            <param name="listenerType">The <see cref="T:Aggregator.IListenFor`1"/> type whose collection of <see cref="T:System.WeakReference"/>'s are required.</param>
+            <returns>The <see cref="T:System.Collections.Generic.ICollection`1"/> of <see cref="T:System.WeakReference"/>'s.</returns>
+        </member>
+        <member name="M:Aggregator.MessageAggregator.RemoveZombieSubscriptions(System.Collections.Generic.IEnumerable{System.WeakReference},System.Collections.Generic.ICollection{System.WeakReference})">
+            <summary>
+            Remove the listeners that have been garbage collected from the list of subscribers.
+            </summary>
+            <param name="subscriptionsToRemove">The list of listeners to be removed.</param>
+            <param name="subscriptions">The list the listeners are to be removed from.</param>
+        </member>
+        <member name="T:Aggregator.WeakReferenceExtensions">
+            <summary>
+            Extension methods for the <see cref="T:System.WeakReference"/> class.
+            </summary>
+        </member>
+        <member name="M:Aggregator.WeakReferenceExtensions.ReferenceEquals(System.WeakReference,System.Object)">
+            <summary>
+            Determine if the <paramref name="target"/> is the same objects as the <see cref="P:System.WeakReference.Target"/> 
+            of the <paramref name="weakReference"/>.
+            </summary>
+            <param name="weakReference">The <see cref="T:System.WeakReference"/> to the object being tested.</param>
+            <param name="target">The object being compared.</param>
+            <returns>True if the <see cref="P:System.WeakReference.Target"/> of <paramref name="weakReference"/> is the same
+            object as <paramref name="target"/>, otherwise False.</returns>
+        </member>
+    </members>
+</doc>
