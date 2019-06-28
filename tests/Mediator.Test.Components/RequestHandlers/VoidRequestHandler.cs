@@ -1,20 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Mediator.Test.Components.Requests;
 
-namespace Mediator.Test.Components.Handlers
+namespace Mediator.Test.Components.RequestHandlers
 {
     public class VoidRequestHandler : VoidRequestHandler<VoidRequest>
     {
-        public static bool RequestHandled { get; private set; }
-
-        public VoidRequestHandler()
-        {
-            RequestHandled = false;
-        }
-
         protected override Task HandleRequest(VoidRequest request)
         {
-            RequestHandled = true;
+            Actual.Pipeline.Enqueue(typeof(VoidRequestHandler));
             return Task.CompletedTask;
         }
     }

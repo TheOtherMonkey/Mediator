@@ -3,16 +3,13 @@ using System.Threading.Tasks;
 using Mediator.Test.Components.Requests;
 using Mediator.Test.Components.Responses;
 
-namespace Mediator.Test.Components.Handlers
+namespace Mediator.Test.Components.RequestHandlers
 {
     public class GetFlightsQueryHandler : IHandleRequests<GetFlightsQuery, List<Flight>>
     {
-        public static bool RequestHandled { get; private set; }
-
-
         public Task<List<Flight>> Handle(GetFlightsQuery request)
         {
-            RequestHandled = true;
+            Actual.Pipeline.Enqueue(typeof(GetFlightsQueryHandler));
             return Task.FromResult(new List<Flight>());
         }
     }

@@ -91,7 +91,7 @@
       <Name>Mediator</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\tests\Mediator.Test.Components\Mediator.Test.Components.csproj">
-      <Project>{6873306c-fd04-479f-8857-2fa99b9cdbcf}</Project>
+      <Project>{161cf000-b272-4c37-b018-5e68a3ab1073}</Project>
       <Name>Mediator.Test.Components</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+// ReSharper disable UnusedParameter.Global
 
 namespace Mediator
 {
@@ -15,6 +16,7 @@ namespace Mediator
         /// <summary>
         /// The request that is being decorated.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         protected readonly IHandleRequests<TRequest, TResponse> Inner;
 
         /// <summary>
@@ -32,6 +34,41 @@ namespace Mediator
         /// </summary>
         /// <param name="request">The request/query for which a response is required.</param>
         /// <returns>The request to the response.</returns>
-        public abstract Task<TResponse> Handle(TRequest request);
+        public async Task<TResponse> Handle(TRequest request)
+        {
+            PreInnerHandleInvocation(request);
+            var response = await InvokeInnerHandle(request);
+            PostInnerHandleInvocation(request, response);
+
+            return response;
+        }
+
+        /// <summary>
+        /// Perform actions prior to invoking the decorated
+        /// <see cref="IHandleRequests{TRequest,TResponse}.Handle"/> method.
+        /// </summary>
+        /// <param name="request">The request that has been made.</param>
+        protected virtual void PreInnerHandleInvocation(TRequest request)
+        { }
+
+        /// <summary>
+        /// Invoke the handler on the decorated <see cref="IHandleRequests{TRequest,TResponse}.Handle"/> method.
+        /// </summary>
+        /// <param name="request">The request that has been made.</param>
+        /// <returns>The response from the next item in the pipeline.</returns>
+        // ReSharper disable once VirtualMemberNeverOverridden.Global
+        protected virtual async Task<TResponse> InvokeInnerHandle(TRequest request)
+        {
+            return await Inner.Handle(request);
+        }
+
+        /// <summary>
+        /// Perform actions after invoking the decorated 
+        /// <see cref="IHandleRequests{TRequest,TResponse}.Handle"/> method.
+        /// </summary>
+        /// <param name="request">The request that has been made.</param>
+        /// <param name="response">The response from the next item in the pipeline.</param>
+        protected virtual void PostInnerHandleInvocation(TRequest request, TResponse response)
+        { }
     }
 }

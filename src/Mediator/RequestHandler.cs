@@ -34,7 +34,7 @@ namespace Mediator
         private static async Task<TResponse> Handle(TRequest request, IServiceFactory factory)
         {
             var handler = factory.GetRequestHandler<TRequest, TResponse>();
-            var pipelineBehaviors = factory.GetPipeLineBehaviors<TRequest, TResponse>(request).Reverse();
+            var pipelineBehaviors = factory.GetPipeLineBehaviors<TRequest, TResponse>().Reverse();
             var pipeLine = pipelineBehaviors.Aggregate(handler.HandleRequest(request), (next, pipe) => () => pipe.Handle(request, next));
 
             return await pipeLine();

@@ -36,9 +36,9 @@ namespace Mediator
         /// <typeparam name="TRequest">The type of request.</typeparam>
         /// <typeparam name="TResponse">The type response returned from the request.</typeparam>
         /// <param name="factory">The implementation of the <see cref="IServiceFactory"/>.</param>
-        /// <param name="request">The request being made.</param>
         /// <returns>The list of <see cref="IPipelineBehaviour{TRequest,TResponse}"/> that will be executed to fulfill the request.</returns>
-        public static IReadOnlyCollection<IPipelineBehaviour<TRequest, TResponse>> GetPipeLineBehaviors<TRequest, TResponse>(this IServiceFactory factory, TRequest request)
+        public static IReadOnlyCollection<IPipelineBehaviour<TRequest, TResponse>> 
+            GetPipeLineBehaviors<TRequest, TResponse>(this IServiceFactory factory)
             where TRequest : IAmARequest<TResponse>
         {
             return factory.GetInstances<IPipelineBehaviour<TRequest, TResponse>>();

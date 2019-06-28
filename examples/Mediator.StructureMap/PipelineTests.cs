@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aggregator;
-using Mediator.Test.Components.Handlers;
-using Mediator.Test.Components.Pipeline;
+using Mediator.Test.Components;
+using Mediator.Test.Components.RequestHandlerDecorators;
+using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
+using Mediator.Test.Components.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StructureMap;
@@ -28,8 +32,8 @@ namespace Mediator.StructureMap
             });
 
             var handler = cfg.For(typeof(IHandleRequests<,>));
-            handler.DecorateAllWith(typeof(AuthorizationDecorator<,>));
-            handler.DecorateAllWith(typeof(LoggingDecorator<,>));
+            handler.DecorateAllWith(typeof(PreRequestDecorator<,>));
+            handler.DecorateAllWith(typeof(PostRequestDecorator<,>));
 
             cfg.For<IServiceFactory>().Use<StructureMapServiceFactory>();
             cfg.For<IAggregateMessages>().Use($"construct {nameof(IAggregateMessages)}", c =>
@@ -42,34 +46,49 @@ namespace Mediator.StructureMap
 
         });
 
+        /// <summary>
+        /// Set up the test objects.
+        /// </summary>
+        [TestInitialize]
+        public void Setup()
+        {
+            Actual.Pipeline.Clear();
+        }
+
         [TestMethod]
         public async Task TestPipeLine_Decorates_IHandleRequests_TRequest_TResponse()
         {
             // Arrange
+            var expected = new Queue<Type>();
+            expected.Enqueue(typeof(PreRequestDecorator<GetFlightsQuery, List<Flight>>));
+            expected.Enqueue(typeof(GetFlightsQueryHandler));
+            expected.Enqueue(typeof(PostRequestDecorator<GetFlightsQuery, List<Flight>>));
+
             var mediator = Container.GetInstance<IMediate>();
 
             // Act
             await mediator.Request(new GetFlightsQuery());
 
             // Assert
-            Assert.IsTrue(LoggingHandler.RequestHandled);
-            Assert.IsTrue(AuthorizationHandler.RequestHandled);
-            Assert.IsTrue(GetFlightsQueryHandler.RequestHandled);
+            CollectionAssert.AreEqual(expected, Actual.Pipeline);
         }
 
         [TestMethod]
         public async Task TestPipeLine_Decorates_IHandleRequests_TRequest()
         {
             // Arrange
+            var expected = new Queue<Type>();
+            expected.Enqueue(typeof(PreRequestDecorator<VoidRequest, Void>));
+            expected.Enqueue(typeof(VoidRequestHandler));
+            expected.Enqueue(typeof(PostRequestDecorator<VoidRequest, Void>));
+
             var mediator = Container.GetInstance<Mediator>();
 
             // Act
             await mediator.Send(new VoidRequest());
 
             // Assert
-            Assert.IsTrue(LoggingHandler.RequestHandled);
-            Assert.IsTrue(AuthorizationHandler.RequestHandled);
-            Assert.IsTrue(VoidRequestHandler.RequestHandled);
+            CollectionAssert.AreEqual(expected, Actual.Pipeline);
         }
     }
 }

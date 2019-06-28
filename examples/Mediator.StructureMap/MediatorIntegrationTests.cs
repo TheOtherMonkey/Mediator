@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aggregator;
-using Mediator.Test.Components.Handlers;
+using Mediator.Test.Components;
+using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
 using Mediator.Test.Components.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,6 +32,15 @@ namespace Mediator.StructureMap
             });
         });
 
+        /// <summary>
+        /// Set up the test objects.
+        /// </summary>
+        [TestInitialize]
+        public void Setup()
+        {
+            Actual.Pipeline.Clear();
+        }
+
         [TestMethod]
         public async Task Request_GetAircraftQuery_Responds_With_Aircraft_List()
         {
@@ -43,9 +53,7 @@ namespace Mediator.StructureMap
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.IsNotNull(response);
             Assert.IsInstanceOfType(response, typeof(List<Aircraft>));
-            Assert.IsTrue(GetAircraftQueryHandler.RequestHandled);
         }
 
         [TestMethod]
@@ -60,7 +68,7 @@ namespace Mediator.StructureMap
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(VoidRequestHandler.RequestHandled);
+            Assert.AreEqual(typeof(VoidRequestHandler), Actual.Pipeline.Peek());
         }
 
         [TestMethod]

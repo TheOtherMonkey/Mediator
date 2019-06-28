@@ -9,4 +9,6 @@
     <DocumentationFile>Aggregator.Lib.xml</DocumentationFile>
   </PropertyGroup>
 
+  <Import Project="..\..\AssemblyVersionInfo.proj" />
+
 </Project>

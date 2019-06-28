@@ -1,9 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aggregator;
 using Lamar;
-using Mediator.Test.Components.Handlers;
-using Mediator.Test.Components.Pipeline;
+using Lamar.Scanning.Conventions;
+using Mediator.Test.Components;
+using Mediator.Test.Components.PipelineBehaviours;
+using Mediator.Test.Components.RequestHandlerDecorators;
+using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
+using Mediator.Test.Components.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -17,57 +23,90 @@ namespace Mediator.Lamar
     [TestClass]
     public class PipelineTests
     {
-        private static Mock<IAggregateMessages> _mockAggregator;
 
-        private static readonly IContainer Container = new Container(cfg =>
+        /// <summary>
+        /// Set up the test objects.
+        /// </summary>
+        [TestInitialize]
+        public void Setup()
         {
-            cfg.Scan(scanner =>
-            {
-                scanner.AssemblyContainingType<VoidRequest>();
-                scanner.ConnectImplementationsToTypesClosing(typeof(IHandleRequests<,>));
-            });
-
-            cfg.For(typeof(IPipelineBehaviour<,>)).Add(typeof(AuthorizationPipeline<,>));
-            cfg.For(typeof(IPipelineBehaviour<,>)).Add(typeof(LoggingPipeline<,>));
-
-            cfg.For<IAggregateMessages>().Use(c =>
-            {
-                _mockAggregator = new Mock<IAggregateMessages>();
-                return _mockAggregator.Object;
-            });
-
-            cfg.For<IMediate>().Use<Mediator>();
-            cfg.For<IServiceFactory>().Use<ServiceFactory>();
-        });
-
-        [TestMethod]
-        public async Task TestPipeLine_Decorates_IHandleRequests_TRequest_TResponse()
-        {
-            // Arrange
-            var mediator = Container.GetInstance<IMediate>();
-
-            // Act
-            await mediator.Request(new GetAircraftQuery());
-
-            // Assert
-            Assert.IsTrue(LoggingHandler.RequestHandled);
-            Assert.IsTrue(AuthorizationHandler.RequestHandled);
-            Assert.IsTrue(GetAircraftQueryHandler.RequestHandled);
+            Actual.Pipeline.Clear();
         }
 
         [TestMethod]
-        public async Task TestPipeLine_Decorates_IHandleRequests_TRequest()
+        public async Task Request_Uses_Registered_PipelineBehaviours()
         {
             // Arrange
-            var mediator = Container.GetInstance<Mediator>();
+            var container = new Container(cfg =>
+            {
+                cfg.Scan(scanner =>
+                {
+                    scanner.AssemblyContainingType<VoidRequest>();
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IHandleRequests<,>));
+                });
+
+                cfg.AddType(typeof(IPipelineBehaviour<,>),
+                    typeof(PreRequestPipelineBehaviour<,>));
+                cfg.AddType(typeof(IPipelineBehaviour<,>),
+                    typeof(PostRequestPipelineBehaviour<,>));
+
+                cfg.For<IAggregateMessages>().Use(c => new Mock<IAggregateMessages>().Object);
+
+                cfg.For<IMediate>().Use<Mediator>();
+                cfg.For<IServiceFactory>().Use<ServiceFactory>();
+            });
+
+            var expected = new Queue<Type>();
+            expected.Enqueue(typeof(PreRequestPipelineBehaviour<GetAircraftQuery, List<Aircraft>>));
+            expected.Enqueue(typeof(GetAircraftQueryHandler));
+            expected.Enqueue(typeof(PostRequestPipelineBehaviour<GetAircraftQuery, List<Aircraft>>));
+
+            var mediator = container.GetInstance<IMediate>();
 
             // Act
-            await mediator.Send(new VoidRequest());
+            await mediator.Request(new GetAircraftQuery())
+                .ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(LoggingHandler.RequestHandled);
-            Assert.IsTrue(AuthorizationHandler.RequestHandled);
-            Assert.IsTrue(VoidRequestHandler.RequestHandled);
+            CollectionAssert.AreEqual(expected, Actual.Pipeline);
+        }
+
+
+        [TestMethod]
+        public async Task Request_Uses_Registered_Decorator_RequestHandlers()
+        {
+            // Arrange
+            var container = new Container(cfg =>
+            {
+                cfg.Scan(scanner =>
+                {
+                    scanner.AssemblyContainingType<VoidRequest>();
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IHandleRequests<,>));
+                });
+
+                var handler = cfg.For(typeof(IHandleRequests<,>));
+                handler.DecorateAllWith(typeof(PreRequestDecorator<,>));
+                handler.DecorateAllWith(typeof(PostRequestDecorator<,>));
+
+                cfg.For<IAggregateMessages>().Use(c => new Mock<IAggregateMessages>().Object);
+
+                cfg.For<IMediate>().Use<Mediator>();
+                cfg.For<IServiceFactory>().Use<ServiceFactory>();
+            });
+
+            var expected = new Queue<Type>();
+            expected.Enqueue(typeof(PreRequestDecorator<GetAircraftQuery, List<Aircraft>>));
+            expected.Enqueue(typeof(GetAircraftQueryHandler));
+            expected.Enqueue(typeof(PostRequestDecorator<GetAircraftQuery, List<Aircraft>>));
+
+            var mediator = container.GetInstance<IMediate>();
+
+            // Act
+            await mediator.Request(new GetAircraftQuery())
+                .ConfigureAwait(false);
+            
+            // Assert
+            CollectionAssert.AreEqual(expected, Actual.Pipeline);
         }
     }
 }

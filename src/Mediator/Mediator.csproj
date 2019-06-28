@@ -12,4 +12,6 @@
     <ProjectReference Include="..\Mediator.Lib\Mediator.Lib.csproj" />
   </ItemGroup>
 
+  <Import Project="..\..\AssemblyVersionInfo.proj" />
+
 </Project>

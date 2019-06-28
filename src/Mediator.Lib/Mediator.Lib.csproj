@@ -13,4 +13,6 @@
     <ProjectReference Include="..\Aggregator.Lib\Aggregator.Lib.csproj" />
   </ItemGroup>
 
+  <Import Project="..\..\AssemblyVersionInfo.proj" />
+
 </Project>

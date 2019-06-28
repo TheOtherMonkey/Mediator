@@ -173,6 +173,28 @@
             <param name="request">The request/query for which a response is required.</param>
             <returns>The request to the response.</returns>
         </member>
+        <member name="M:Mediator.RequestHandlerDecorator`2.PreInnerHandleInvocation(`0)">
+            <summary>
+            Perform actions prior to invoking the decorated
+            <see cref="M:Mediator.IHandleRequests`2.Handle(`0)"/> method.
+            </summary>
+            <param name="request">The request that has been made.</param>
+        </member>
+        <member name="M:Mediator.RequestHandlerDecorator`2.InvokeInnerHandle(`0)">
+            <summary>
+            Invoke the handler on the decorated <see cref="M:Mediator.IHandleRequests`2.Handle(`0)"/> method.
+            </summary>
+            <param name="request">The request that has been made.</param>
+            <returns>The response from the next item in the pipeline.</returns>
+        </member>
+        <member name="M:Mediator.RequestHandlerDecorator`2.PostInnerHandleInvocation(`0,`1)">
+            <summary>
+            Perform actions after invoking the decorated 
+            <see cref="M:Mediator.IHandleRequests`2.Handle(`0)"/> method.
+            </summary>
+            <param name="request">The request that has been made.</param>
+            <param name="response">The response from the next item in the pipeline.</param>
+        </member>
         <member name="T:Mediator.Void">
             <summary>
             Represents a null/void response for a <see cref="T:Mediator.IAmARequest`1"/>

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aggregator;
-using Mediator.Test.Components.Handlers;
+using Mediator.Test.Components;
+using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
 using Mediator.Test.Components.Responses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -25,6 +26,8 @@ namespace Mediator.Tests
         [TestInitialize]
         public void Setup()
         {
+            Actual.Pipeline.Clear();
+
             _mockAggregator = new Mock<IAggregateMessages>();            
             _moqFactory = new Mock<IServiceFactory>();            
 
@@ -67,7 +70,7 @@ namespace Mediator.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(GetFlightsQueryHandler.RequestHandled);
+            Assert.AreEqual(typeof(GetFlightsQueryHandler), Actual.Pipeline.Peek());
         }
 
         [TestMethod]
@@ -86,7 +89,7 @@ namespace Mediator.Tests
                 .ConfigureAwait(false);
 
             // Assert
-            Assert.IsTrue(VoidRequestHandler.RequestHandled);
+            Assert.AreEqual(typeof(VoidRequestHandler), Actual.Pipeline.Peek());
         }
 
         [TestMethod]
