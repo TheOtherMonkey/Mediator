@@ -31,13 +31,16 @@ namespace Mediator
         /// <inheritdoc cref="IMediate" />
         public async Task<TResponse> Request<TResponse>(IAmARequest<TResponse> request)
         {
-            var handlerType = typeof(RequestHandlerImpl<,>)
-                .MakeGenericType(request.GetType(), typeof(TResponse));
-            var handler = Activator.CreateInstance(handlerType);
+            var handler = CreateRequestHandler(request);
+            return await handler.Handle(request, _factory).ConfigureAwait(false);
+        }
 
-            return await((RequestHandler<TResponse>)handler)
-                .Handle(request, _factory)
-                .ConfigureAwait(false);
+        private static RequestHandler<TResponse> CreateRequestHandler<TResponse>(IAmARequest<TResponse> request)
+        {
+            var handlerType = typeof(RequestHandlerImpl<,>)
+                            .MakeGenericType(request.GetType(), typeof(TResponse));
+
+            return (RequestHandler<TResponse>)Activator.CreateInstance(handlerType); 
         }
 
         /// <inheritdoc cref="IMediate" />

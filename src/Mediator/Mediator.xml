@@ -36,7 +36,7 @@
             <param name="factory">The object that is used wrap the IoC container of choice and used
             to construct the required implementors of the <see cref="T:Mediator.IHandleRequests`2"/>
             interfaces.</param>
-            <param name="aggregateMessages">The in-memory event aggregateMessages.</param>
+            <param name="aggregator">The in-memory event aggregator.</param>
         </member>
         <member name="M:Mediator.Mediator.Request``1(Mediator.IAmARequest{``0})">
             <inheritdoc cref="T:Mediator.IMediate" />
