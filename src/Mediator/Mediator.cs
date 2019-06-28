@@ -13,7 +13,7 @@ namespace Mediator
     public class Mediator : IMediate
     {
         private readonly IServiceFactory _factory;
-        private readonly IAggregateMessages _aggregateMessages;
+        private readonly IAggregateMessages _aggregator;
 
         /// <summary>
         /// Construct a new instance of the <see cref="Mediator"/> class.
@@ -21,11 +21,11 @@ namespace Mediator
         /// <param name="factory">The object that is used wrap the IoC container of choice and used
         /// to construct the required implementors of the <see cref="IHandleRequests{TRequest, TResponse}"/>
         /// interfaces.</param>
-        /// <param name="aggregateMessages">The in-memory event aggregateMessages.</param>
-        public Mediator(IServiceFactory factory, IAggregateMessages aggregateMessages)
+        /// <param name="aggregator">The in-memory event aggregator.</param>
+        public Mediator(IServiceFactory factory, IAggregateMessages aggregator)
         {
             _factory = factory;
-            _aggregateMessages = aggregateMessages;
+            _aggregator = aggregator;
         }
 
         /// <inheritdoc cref="IMediate" />
@@ -49,7 +49,7 @@ namespace Mediator
         /// <inheritdoc cref="IMediate" />
         public async Task Publish<T>(T message) where T : IAmAMessage
         {
-            await _aggregateMessages.Publish(message).ConfigureAwait(false);
+            await _aggregator.Publish(message).ConfigureAwait(false);
         }
     }
 }
