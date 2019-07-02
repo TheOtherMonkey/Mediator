@@ -16,6 +16,8 @@ namespace Mediator
         /// <typeparam name="TResponse">The type that indicates the expected response from the request.</typeparam>
         /// <param name="request">The request being made.</param>
         /// <returns>Object from the <see cref="IHandleRequests{TRequest,TResponse}.Handle"/> method.</returns>
+        /// <exception cref="UnableToHandleRequestException">Raised when a request handler has not been registerd to handle 
+        /// the <paramref name="request"/>.</exception>
         Task<TResponse> Request<TResponse>(IAmARequest<TResponse> request);
 
         /// <summary>
@@ -24,6 +26,8 @@ namespace Mediator
         /// is a <see cref="IAmARequest{Void}"/>.
         /// </summary>
         /// <param name="request">The request being made.</param>
+        /// <exception cref="UnableToHandleRequestException">Raised when a request handler has not been registerd to handle 
+        /// the <paramref name="request"/>.</exception>
         Task Send<TRequest>(TRequest request) where TRequest : IAmARequest;
 
         /// <summary>

@@ -24,8 +24,7 @@ namespace Mediator
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException(
-                    $"Unable to construct handler for request of type {typeof(IHandleRequests<TRequest, TResponse>)}", e);
+                throw new UnableToHandleRequestException(typeof(TRequest), e);
             }
         }
 

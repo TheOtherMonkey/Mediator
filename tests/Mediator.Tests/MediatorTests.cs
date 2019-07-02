@@ -104,5 +104,44 @@ namespace Mediator.Tests
             // Assert
             _mockAggregator.Verify(m => m.Publish(mockMessage));
         }
+
+        /// <summary>
+        /// Verify the <see cref="Mediator.Request{TResponse}(IAmARequest{TResponse})"/> raises the
+        /// <see cref="UnableToHandleRequestException"/> when no object has been registered to handle
+        /// the request.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        [ExpectedException(typeof(UnableToHandleRequestException))]
+        public async Task Request_Raises_Unable_When_No_IHandleRequests_Is_Registered()
+        {
+            // Arrange
+            _moqFactory.Setup(m => m.GetInstance<IHandleRequests<TestRequest, TestResponse>>())
+               .Throws(new System.InvalidOperationException());
+
+            // Act
+            await _target.Request(new TestRequest());
+
+            // Assert
+        }
+
+        /// <summary>
+        /// Verify the <see cref="Mediator.Request{TResponse}(IAmARequest{TResponse})"/> raises the
+        /// <see cref="UnableToHandleRequestException"/> when no object has been registered to handle
+        /// the request.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UnableToHandleRequestException))]
+        public async Task Send_Raises_Unable_When_No_IHandleRequests_Is_Registered()
+        {
+            // Arrange
+            _moqFactory.Setup(m => m.GetInstance<IHandleRequests<VoidRequest, Void>>())
+               .Throws(new System.InvalidOperationException());
+
+            // Act
+            await _target.Send(new VoidRequest());
+
+            // Assert
+        }
     }
 }
