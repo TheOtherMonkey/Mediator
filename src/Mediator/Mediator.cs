@@ -8,7 +8,7 @@ namespace Mediator
     /// Very simplistic implementation of the Mediator Design Pattern. Allows
     /// asynchronous CQRS requests to be made that are fulfilled by objects that implement
     /// the <see cref="IHandleRequests{TRequest, TResponse}"/> interface.
-    /// Also incorporates an <see cref="IAggregateMessages"/> to hand the publish/subscribe metaphor.
+    /// Also incorporates an <see cref="IAggregateMessages"/> to handle the publish/subscribe metaphor.
     /// </summary>
     public class Mediator : IMediate
     {
