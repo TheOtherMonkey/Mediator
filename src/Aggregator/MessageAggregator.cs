@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Aggregator
 {
     /// <summary>
-    /// The centralized in-memory event aggregateMessages for the Emerald Application Suite.   
+    /// A centralized in-memory event aggregator.
     /// </summary>    
     /// <remarks>
     /// Utilizes the <see cref="WeakReference"/> type which allows a reference to be obtained and stored
