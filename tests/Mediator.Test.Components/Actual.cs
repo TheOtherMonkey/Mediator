@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Mediator.Test.Components
 {
     /// <summary>
-    /// Static class containing the order list of calls that have been made through the
+    /// Static class used to record the list of types that were involved in a test and the order in which they were called.
     /// </summary>
     public static class Actual
     {
