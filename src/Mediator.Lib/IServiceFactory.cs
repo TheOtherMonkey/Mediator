@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Interface to be used by an object that wraps the IoC container of

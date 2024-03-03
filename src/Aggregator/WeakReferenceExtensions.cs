@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Aggregator
+﻿namespace Aggregator
 {
     /// <summary>
     /// Extension methods for the <see cref="WeakReference"/> class.

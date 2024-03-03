@@ -1,5 +1,4 @@
-﻿// ReSharper disable UnusedTypeParameter
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Interface for a class that represents a request that will be made using 

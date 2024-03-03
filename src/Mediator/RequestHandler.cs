@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-
-namespace Mediator
+﻿namespace Mediator
 {
     internal abstract class RequestHandler<TResponse>
     {

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-// ReSharper disable UnusedMemberInSuper.Global
-
-namespace Aggregator
+﻿namespace Aggregator
 {
     /// <summary>
     /// Interface for a centralized in-memory Event Aggregator. 

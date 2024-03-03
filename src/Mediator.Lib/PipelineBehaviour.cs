@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-// ReSharper disable UnusedParameter.Global
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Abstract base class for a component in the behaviour pipeline.

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Aggregator;
+﻿using Aggregator;
 using Mediator.Test.Components;
 using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
 using Mediator.Test.Components.Responses;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace Mediator.Tests

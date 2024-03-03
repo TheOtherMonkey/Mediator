@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Lamar;
+﻿using Lamar;
 
 namespace Mediator.Lamar
 {

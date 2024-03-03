@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-// ReSharper disable UnusedParameter.Global
-
-namespace Aggregator
+﻿namespace Aggregator
 {
     /// <summary>
     /// Generic interface to identify a class's interest in a particular message that can be propagated

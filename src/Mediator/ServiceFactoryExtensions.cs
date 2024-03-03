@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Static extension methods for the <see cref="IServiceFactory"/> interface.

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Extension methods for the <see cref="IHandleRequests{TRequest,TResponse}"/> interface.

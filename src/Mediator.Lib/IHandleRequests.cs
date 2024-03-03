@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Interface for classes that handle <see cref="IAmARequest{TResponse}"/>.

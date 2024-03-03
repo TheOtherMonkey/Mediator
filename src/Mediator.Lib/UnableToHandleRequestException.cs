@@ -1,5 +1,4 @@
-﻿using Mediator.Properties;
-using System;
+﻿using Mediator.Lib.Properties;
 
 namespace Mediator
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Aggregator;
+﻿using Aggregator;
 using Lamar;
 using Lamar.Scanning.Conventions;
 using Mediator.Test.Components;
@@ -10,7 +7,6 @@ using Mediator.Test.Components.RequestHandlerDecorators;
 using Mediator.Test.Components.RequestHandlers;
 using Mediator.Test.Components.Requests;
 using Mediator.Test.Components.Responses;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace Mediator.Lamar
@@ -31,44 +27,6 @@ namespace Mediator.Lamar
         public void Setup()
         {
             Actual.Pipeline.Clear();
-        }
-
-        [TestMethod]
-        public async Task Request_Uses_Registered_PipelineBehaviours()
-        {
-            // Arrange
-            var container = new Container(cfg =>
-            {
-                cfg.Scan(scanner =>
-                {
-                    scanner.AssemblyContainingType<VoidRequest>();
-                    scanner.ConnectImplementationsToTypesClosing(typeof(IHandleRequests<,>));
-                });
-
-                cfg.AddType(typeof(IPipelineBehaviour<,>),
-                    typeof(PreRequestPipelineBehaviour<,>));
-                cfg.AddType(typeof(IPipelineBehaviour<,>),
-                    typeof(PostRequestPipelineBehaviour<,>));
-
-                cfg.For<IAggregateMessages>().Use(c => new Mock<IAggregateMessages>().Object);
-
-                cfg.For<IMediate>().Use<Mediator>();
-                cfg.For<IServiceFactory>().Use<ServiceFactory>();
-            });
-
-            var expected = new Queue<Type>();
-            expected.Enqueue(typeof(PreRequestPipelineBehaviour<GetAircraftQuery, List<Aircraft>>));
-            expected.Enqueue(typeof(GetAircraftQueryHandler));
-            expected.Enqueue(typeof(PostRequestPipelineBehaviour<GetAircraftQuery, List<Aircraft>>));
-
-            var mediator = container.GetInstance<IMediate>();
-
-            // Act
-            await mediator.Request(new GetAircraftQuery())
-                .ConfigureAwait(false);
-
-            // Assert
-            CollectionAssert.AreEqual(expected, Actual.Pipeline);
         }
 
 

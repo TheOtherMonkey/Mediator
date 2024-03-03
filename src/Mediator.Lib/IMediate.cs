@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Aggregator;
-// ReSharper disable UnusedMemberInSuper.Global
+﻿using Aggregator;
 
 namespace Mediator
 {

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-// ReSharper disable UnusedParameter.Global
-
-namespace Mediator
+﻿namespace Mediator
 {
     /// <summary>
     /// Abstract handler for a <see cref="IHandleRequests{TRequest,TResponse}"/> that returns
